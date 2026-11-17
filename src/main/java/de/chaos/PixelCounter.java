@@ -129,12 +129,16 @@ public class PixelCounter {
         System.out.println("--- " + name + " ---");
         System.out.println("Center of mass: (" + String.format("%.2f", centerX) + ", " + String.format("%.2f", centerY) + ")");
 
-        BufferedImage result = drawResult(image, isAmoeba, centerX, centerY);
+        StatisticMomentum.MomentumResult momentum = StatisticMomentum.berechne(allPixels);
+
+        BufferedImage result = drawResult(image, isAmoeba, centerX, centerY, momentum);
 
         File outputFile = new File(outputPath);
         outputFile.getParentFile().mkdirs();
         ImageIO.write(result, "png", outputFile);
         System.out.println("ergebnis gespeichert unter: " + outputPath);
+
+        StatisticMomentum.berechne(allPixels);
 
         return allPixels;
     }
@@ -163,7 +167,7 @@ public class PixelCounter {
         return maxChannel - minChannel <= 30;
     }
 
-    static BufferedImage drawResult(BufferedImage image, boolean[][] isAmoeba, double centerX, double centerY) {
+    static BufferedImage drawResult(BufferedImage image, boolean[][] isAmoeba, double centerX, double centerY, StatisticMomentum.MomentumResult momentum) {
         BufferedImage result = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2d = result.createGraphics();
 
@@ -206,6 +210,23 @@ public class PixelCounter {
         int radius = 8;
         g2d.fillOval((int) centerX - radius, (int) centerY - radius, radius * 2, radius * 2);
 
+        // Draw momentum center as blue dot
+        if (momentum != null) {
+            g2d.setColor(Color.BLUE);
+            g2d.fillOval(momentum.centerX - radius, momentum.centerY - radius, radius * 2, radius * 2);
+
+            // Draw x-radius vector line (green)
+            g2d.setColor(new Color(0, 255, 0, 180));
+            g2d.setStroke(new BasicStroke(3f));
+            g2d.drawLine(momentum.centerX, momentum.centerY,
+                    (int) (momentum.centerX + momentum.xRadius), momentum.centerY);
+
+            // Draw y-radius vector line (magenta)
+            g2d.setColor(new Color(255, 0, 255, 180));
+            g2d.drawLine(momentum.centerX, momentum.centerY,
+                    momentum.centerX, (int) (momentum.centerY + momentum.yRadius));
+        }
+
         g2d.setStroke(new BasicStroke(1.5f));
         g2d.drawLine((int) centerX - 20, (int) centerY, (int) centerX + 20, (int) centerY);
         g2d.drawLine((int) centerX, (int) centerY - 20, (int) centerX, (int) centerY + 20);
@@ -227,7 +248,7 @@ public class PixelCounter {
             File[] imageFiles = dir.listFiles((d, name) -> name.toLowerCase().endsWith(".png") || name.toLowerCase().endsWith(".jpg") || name.toLowerCase().endsWith(".jpeg"));
 
             if (imageFiles == null || imageFiles.length == 0) {
-                System.err.println("No images found in: " + resourceDir);
+                System.err.println("keine bildchen gefunden in: " + resourceDir);
                 return;
             }
 
