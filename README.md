@@ -29,6 +29,8 @@ Bild mit Outline, bewerteter Masse, Schwerbunkt und Momentum
 
 ![resultat1](https://github.com/Chaoshero5567/Amobe/blob/main/output/Amoebe_1_result.png)
 
+Hinweis: Wie zu sehen ist ist die Berechnung nicht perfekt da hier ein großer Teil unten links fehlerhaft ausgeschnitten wurde und somit nicht mit berechnet wurde.
+
 
 Schwerpunkt liegt bei: (1773,62, 1421,68)
 Statische Momente:
