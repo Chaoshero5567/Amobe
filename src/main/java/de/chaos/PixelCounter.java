@@ -138,7 +138,6 @@ public class PixelCounter {
         ImageIO.write(result, "png", outputFile);
         System.out.println("ergebnis gespeichert unter: " + outputPath);
 
-        StatisticMomentum.berechne(allPixels);
 
         return allPixels;
     }
@@ -210,18 +209,15 @@ public class PixelCounter {
         int radius = 8;
         g2d.fillOval((int) centerX - radius, (int) centerY - radius, radius * 2, radius * 2);
 
-        // Draw momentum center as blue dot
         if (momentum != null) {
             g2d.setColor(Color.BLUE);
             g2d.fillOval(momentum.centerX - radius, momentum.centerY - radius, radius * 2, radius * 2);
 
-            // Draw x-radius vector line (green)
             g2d.setColor(new Color(0, 255, 0, 180));
             g2d.setStroke(new BasicStroke(3f));
             g2d.drawLine(momentum.centerX, momentum.centerY,
                     (int) (momentum.centerX + momentum.xRadius), momentum.centerY);
 
-            // Draw y-radius vector line (magenta)
             g2d.setColor(new Color(255, 0, 255, 180));
             g2d.drawLine(momentum.centerX, momentum.centerY,
                     momentum.centerX, (int) (momentum.centerY + momentum.yRadius));

@@ -29,6 +29,5 @@ public class CSVCreator {
                 writer.newLine();
             }
         }
-        System.out.println("CSV saved to: " + outputPath);
     }
 }
