@@ -19,7 +19,7 @@ Projekt zur Berechnung des Schwerpunktes und des Statischen Moments der IAM Amö
 
 # Ergebnisse
 
-Amöbe 1
+#Amöbe 1
 
 Ausgeschnittene Bild:
 
@@ -33,12 +33,14 @@ Hinweis: Wie zu sehen ist ist die Berechnung nicht perfekt da hier ein großer T
 
 
 Schwerpunkt liegt bei: (1773,62, 1421,68)
+
 Statische Momente:
-x: 1.0733194925535835E12 p^2
+
+x: 1.0733194925535835E12 p^2 <br>
 y: 5.4237897599370233E11 p^2
 
 
-Amöbe 2
+#Amöbe 2
 
 Ausgeschnittene Bild:
 
@@ -49,8 +51,10 @@ Bild mit Outline, bewerteter Masse, Schwerbunkt und Momentum
 ![resultat2](https://github.com/Chaoshero5567/Amobe/blob/main/output/Amoebe_2_result.png)
 
 Schwerpunkt liegt bei:(1838,24, 1521,87)
+
 Statische Momente:
-x: 1.3726804564022947E12 p^2
+
+x: 1.3726804564022947E12 p^2 <br>
 y: 1.0177214267327053E12 p^2
 
 
