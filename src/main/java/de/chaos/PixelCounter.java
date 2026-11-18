@@ -14,6 +14,7 @@ public class PixelCounter {
     File dir;
     int counter = 0;
 
+    // Laden der Bilder
     private static BufferedImage loadImage(String path) throws IOException {
         File file = new File(path);
         if (!file.exists()) {
@@ -22,6 +23,7 @@ public class PixelCounter {
         return ImageIO.read(file);
     }
 
+    // Alles
      private List<ImagePixel> analyzeAndSave(BufferedImage image, String name, String outputPath) throws IOException {
         int width = image.getWidth();
         int height = image.getHeight();
@@ -40,6 +42,7 @@ public class PixelCounter {
         int stickerMaxY = Integer.MIN_VALUE;
         boolean hasSticker = false;
 
+        // Listen für Outline und aller Analysierten Pixel
         List<ImagePixel> allPixels = new ArrayList<>();
         List<String> outlinePoints = new ArrayList<>();
 
@@ -51,16 +54,20 @@ public class PixelCounter {
                 int green = (rgb >> 8) & 0xFF;
                 int blue = rgb & 0xFF;
 
+                // Check auf Transparenz, 128 wurde genommen da es den Mittelpunkt darstellt und so den Outline etwas genauer bestimmen sollte.
                 if (alpha < 128) {
                     continue;
                 }
 
+                // Fragt ab ob die Pixel Gelb sind, also teil der Haupt Amöbe
                 if (isYellow(red, green, blue)) {
                     yellowPixels++;
                     isAmoeba[y][x] = true;
                     isYellowPixel[y][x] = true;
                     sumX += x;
                     sumY += y;
+
+                    // Daten werden hinzugefügt
                     allPixels.add(new ImagePixel(x, y, "yellow", true));
                 } else if (isWhiteSticker(red, green, blue)) {
                     whitePixels++;
@@ -72,13 +79,17 @@ public class PixelCounter {
                     if (x > stickerMaxX) stickerMaxX = x;
                     if (y < stickerMinY) stickerMinY = y;
                     if (y > stickerMaxY) stickerMaxY = y;
+                    // abfrage der Sticker area
                     allPixels.add(new ImagePixel(x, y, "sticker", true));
                 } else {
+                    // Pixel werden als Hintergrund gezählt
                     allPixels.add(new ImagePixel(x, y, "background", false));
                 }
             }
         }
 
+
+        // redunanz abfrage
         if (hasSticker) {
             int expand = 5;
             int sMinX = Math.max(0, stickerMinX - expand);
@@ -106,6 +117,7 @@ public class PixelCounter {
         double centerX = (totalPixels > 0) ? sumX / totalPixels : 0;
         double centerY = (totalPixels > 0) ? sumY / totalPixels : 0;
 
+        // edge
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
                 if (!isAmoeba[y][x]) continue;
@@ -131,6 +143,7 @@ public class PixelCounter {
 
         StatisticMomentum.MomentumResult momentum = StatisticMomentum.berechne(allPixels);
 
+        // Bild generation
         BufferedImage result = drawResult(image, isAmoeba, centerX, centerY, momentum);
 
         File outputFile = new File(outputPath);
@@ -142,6 +155,7 @@ public class PixelCounter {
         return allPixels;
     }
 
+    // Ist es gelb?
     static boolean isYellow(int r, int g, int b) {
         if (r < 150 || g < 150) {
             return false;
@@ -154,6 +168,7 @@ public class PixelCounter {
         return dominant - secondary <= 80;
     }
 
+    // ist es der sticker
     static boolean isWhiteSticker(int r, int g, int b) {
         if (r < 200 || g < 200 || b < 200) {
             return false;
@@ -173,6 +188,7 @@ public class PixelCounter {
         int height = isAmoeba.length;
         int width = isAmoeba[0].length;
 
+        // Füllt Die area der Amöbe pixel
         g2d.setColor(Color.WHITE);
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
@@ -209,6 +225,8 @@ public class PixelCounter {
         int radius = 8;
         g2d.fillOval((int) centerX - radius, (int) centerY - radius, radius * 2, radius * 2);
 
+
+        // Momentum Feile
         if (momentum != null) {
             g2d.setColor(Color.BLUE);
             g2d.fillOval(momentum.centerX - radius, momentum.centerY - radius, radius * 2, radius * 2);
@@ -227,6 +245,7 @@ public class PixelCounter {
         g2d.drawLine((int) centerX - 20, (int) centerY, (int) centerX + 20, (int) centerY);
         g2d.drawLine((int) centerX, (int) centerY - 20, (int) centerX, (int) centerY + 20);
 
+        // text
         g2d.setColor(Color.RED);
         g2d.setFont(new Font("Arial", Font.BOLD, 48));
         String label = String.format("CM: (%.1f, %.1f)", centerX, centerY);
