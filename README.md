@@ -8,6 +8,7 @@ Projekt zur Berechnung des Schwerpunktes und des Statischen Moments der IAM Amö
   # Hinweise
 
   Der berechnete Schwerpunkt und das Statische Momentum ist nur eine annäherung, da hier mehrere Probelem auftreten.
+  
   Einerseits muss ich drauf hoffen das die Amöben richtug ausgeschnitten worden sind, was bei der einen schonmal etwas schiefgelaufen ist.
   Dazu kommt das Gewicht vom sticker das nicht mitbeachtet wurde, die Fäche wurde genau wie der Rest mit 1 bewertet in der Rechnung, obwohl der Sticker etwas an Gewicht mehr hat, in einer späteren Revision werde ich diese mit 1.01
   berechnen für eine bessere annäherung.
