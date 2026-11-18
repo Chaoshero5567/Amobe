@@ -4,6 +4,7 @@ Projekt zur Berechnung des Schwerpunktes und des Statischen Moments der IAM Amö
 - MacBook -> zur entfernung der Bild hintergründe
 - StackOverflow -> Code hilfen
 - Java -> Programiersprache meiner Wahl
+- Ai -> zur Hilfe mit teilen des Codes, darunter die ganze CSV und teile der Visuellen Asugabe, da diese Felder sind die ich vorher nicht benutz habe
 
   # Hinweise
 
@@ -15,11 +16,6 @@ Projekt zur Berechnung des Schwerpunktes und des Statischen Moments der IAM Amö
   Da die Bilder wahrscheinlich keinem Perfekten 90° Winkel entsprechen verzeht dieses nochmals die Berechnungen etwas.
 
   Bei dem Statischen Moment wird vom Mittelpunkt des Scwhwerpunktes ausgegangen, und diese werden in pixel^2 angegeben.
-
-
-
-  - Der CSV code wurde mit Hilfe von KI geschrieben da ich noch nie mit einer CSV gearbeitet habe. Diese werden aber nicht aktiv zur berechnung benutzt und sind mehr ein nettes Extra.
-
 
 # Ergebnisse
 
