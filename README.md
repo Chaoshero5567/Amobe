@@ -31,12 +31,12 @@ Bild mit Outline, bewerteter Masse, Schwerbunkt und Momentum
 Hinweis: Wie zu sehen ist ist die Berechnung nicht perfekt da hier ein großer Teil unten links fehlerhaft ausgeschnitten wurde und somit nicht mit berechnet wurde.
 
 
-Schwerpunkt liegt bei: (1773,672; 1421,640)
+Schwerpunkt liegt bei: (1763,228; 1432,014)
 
 Statische Momente:
 
-x: 1.0733194925535835E12 p^2 <br>
-y: 5.4237897599370233E11 p^2
+x: 1.0966998437897742E12 p^2 <br>
+y: 5.649790519876921E11 p^2
 
 
 #Amöbe 2
@@ -49,12 +49,12 @@ Bild mit Outline, bewerteter Masse, Schwerbunkt und Momentum
 
 ![resultat2](https://github.com/Chaoshero5567/Amobe/blob/main/output/Amoebe_2_result.png)
 
-Schwerpunkt liegt bei:(1838,274, 1521,870)
+Schwerpunkt liegt bei:(1838,249; 1521,855)
 
 Statische Momente:
 
-x: 1.3726804564022947E12p^2 <br>
-y: 1.0177214267327053E12 p^2
+x: 1.372754036956749E12 p^2 <br>
+y: 1.0177687445093416E12 p^2
 
 
   

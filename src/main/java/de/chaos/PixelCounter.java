@@ -141,7 +141,7 @@ public class PixelCounter {
         }
 
         System.out.println("--- " + name + " ---");
-        System.out.println("Center of mass: (" + String.format("%.3f", xCenter) + ", " + String.format("%.3f", yCenter) + ")");
+        System.out.println("Schwerpunkt liegt bei: (" + String.format("%.3f", xCenter) + "; " + String.format("%.3f", yCenter) + ")");
 
         StatisticMomentum.MomentumResult momentum = StatisticMomentum.berechne(allPixels);
 
@@ -162,7 +162,7 @@ public class PixelCounter {
         if (r < 150 || g < 150) {
             return false;
         }
-        if (b > 120) {
+        if (b > 150) {
             return false;
         }
         int dominant = Math.max(r, g);
