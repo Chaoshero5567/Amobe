@@ -56,5 +56,10 @@ Statische Momente:
 x: 1.372754036956749E12 p^2 <br>
 y: 1.0177687445093416E12 p^2
 
+Runtime Optimierungen haben das Prokekt von 12 auf unter 3 Sekunden gebracht
+
+<img width="387" height="36" alt="image" src="https://github.com/user-attachments/assets/6a71e0c0-8283-4a8b-acf7-ecb16adb24fd" />
+
+
 
   
