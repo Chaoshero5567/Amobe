@@ -11,8 +11,7 @@ Projekt zur Berechnung des Schwerpunktes und des Statischen Moments der IAM Amö
   Der berechnete Schwerpunkt und das Statische Momentum ist nur eine annäherung, da hier mehrere Probelem auftreten.
   
   Einerseits muss ich drauf hoffen das die Amöben richtug ausgeschnitten worden sind, was bei der einen schonmal etwas schiefgelaufen ist.
-  Dazu kommt das Gewicht vom sticker das nicht mitbeachtet wurde, die Fäche wurde genau wie der Rest mit 1 bewertet in der Rechnung, obwohl der Sticker etwas an Gewicht mehr hat, in einer späteren Revision werde ich diese mit 1.01
-  berechnen für eine bessere annäherung.
+  Dazu kommt das Gewicht vom sticker wurde mit 1.01 bewertet, die Fäche wurde mit 1 bewertet in der Rechnung, dies soll die genauikgeit leicht erhöhen.
   Da die Bilder wahrscheinlich keinem Perfekten 90° Winkel entsprechen verzeht dieses nochmals die Berechnungen etwas.
 
   Bei dem Statischen Moment wird vom Mittelpunkt des Scwhwerpunktes ausgegangen, und diese werden in pixel^2 angegeben.
@@ -32,7 +31,7 @@ Bild mit Outline, bewerteter Masse, Schwerbunkt und Momentum
 Hinweis: Wie zu sehen ist ist die Berechnung nicht perfekt da hier ein großer Teil unten links fehlerhaft ausgeschnitten wurde und somit nicht mit berechnet wurde.
 
 
-Schwerpunkt liegt bei: (1773,62, 1421,68)
+Schwerpunkt liegt bei: (1773,67; 1421,64)
 
 Statische Momente:
 
@@ -50,11 +49,11 @@ Bild mit Outline, bewerteter Masse, Schwerbunkt und Momentum
 
 ![resultat2](https://github.com/Chaoshero5567/Amobe/blob/main/output/Amoebe_2_result.png)
 
-Schwerpunkt liegt bei:(1838,24, 1521,87)
+Schwerpunkt liegt bei:(1838,27, 1521,87)
 
 Statische Momente:
 
-x: 1.3726804564022947E12 p^2 <br>
+x: 1.3726804564022947E12p^2 <br>
 y: 1.0177214267327053E12 p^2
 
 
