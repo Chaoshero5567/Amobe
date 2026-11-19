@@ -8,12 +8,79 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public class PixelCounter {
 
     String resourceDir = "src/main/resources";
     File dir;
 
+    void main() {
+        new PixelCounter().run();
+    }
+
+    void run() {
+        try {
+
+            this.dir = new File(this.resourceDir);
+            File[] imageFiles = dir.listFiles((d, name) -> name.toLowerCase().endsWith(".png") || name.toLowerCase().endsWith(".jpg") || name.toLowerCase().endsWith(".jpeg"));
+
+            if (imageFiles == null || imageFiles.length == 0) {
+                System.err.println("keine bildchen gefunden in: " + resourceDir);
+                return;
+            }
+
+            Arrays.sort(imageFiles);
+
+            //Paralele runtime für optimierung der Zeit (Hat fast 2 Sekunden gebracht)
+            int parallel = Math.min(Runtime.getRuntime().availableProcessors(), imageFiles.length);
+            ExecutorService executor = Executors.newFixedThreadPool(parallel);
+            List<Future<ImageResult>> futures = new ArrayList<>();
+
+            // Rechnen :3
+            for (File file : imageFiles) {
+                futures.add(executor.submit(() -> processImage(file)));
+            }
+
+            // Print out
+            boolean first = true;
+            for (Future<ImageResult> future : futures) {
+                ImageResult result = future.get();
+                if (!first) {
+
+                }
+                first = false;
+                String output = result.getOutput().toString();
+                System.out.println(output);
+            }
+            executor.shutdown();
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private ImageResult processImage(File imageFile) {
+        StringBuilder sb = new StringBuilder();
+        try {
+            String fileName = imageFile.getName();
+            String baseName = fileName.substring(0, fileName.lastIndexOf('.'));
+            BufferedImage image = loadImage(imageFile.getPath());
+
+            List<ImagePixel> pixels = analyzeAndSave(image, baseName, "output/" + baseName + "_result.png");
+            CSVCreator.writePixelsToCSV(pixels, "output/" + baseName + "_result.png");
+
+            return new ImageResult(baseName, pixels, sb);
+        } catch (IOException e) {
+            sb.append("Käfer: ").append(e.getMessage()).append(System.lineSeparator());
+            e.printStackTrace(new java.io.PrintWriter(new java.io.StringWriter()));
+            return new ImageResult(imageFile.getName(), new ArrayList<>(), sb);
+        }
+    }
 
     // Laden der Bilder
     private BufferedImage loadImage(String path) throws IOException {
@@ -30,11 +97,10 @@ public class PixelCounter {
         int height = image.getHeight();
 
         boolean[][] isAmoeba = new boolean[height][width];
-        boolean[][] isYellowPixel = new boolean[height][width];
-
 
         double sumX = 0;
         double sumY = 0;
+        double sumWeight = 0;
 
         int stickerMinX = Integer.MAX_VALUE;
         int stickerMinY = Integer.MAX_VALUE;
@@ -43,12 +109,14 @@ public class PixelCounter {
         boolean hasSticker = false;
 
         // Listen für Outline und aller analysierten Pixel
-        List<ImagePixel> allPixels = new ArrayList<>();
+        List<ImagePixel> allPixels = new ArrayList<>(width * height);
+        int[] rgbPixels = new int[width * height];
+        image.getRGB(0, 0, width, height, rgbPixels, 0, width);
 
-
+        int index = 0;
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
-                int rgb = image.getRGB(x, y);
+                int rgb = rgbPixels[index++];
                 int alpha = (rgb >> 24) & 0xFF;
                 int red = (rgb >> 16) & 0xFF;
                 int green = (rgb >> 8) & 0xFF;
@@ -62,10 +130,12 @@ public class PixelCounter {
                 // Fragt ab ob die Pixel Gelb sind, also teil der Haupt-Amöbe
                 if (isYellow(red, green, blue)) {
                     isAmoeba[y][x] = true;
-                    isYellowPixel[y][x] = true;
 
                     // Daten werden hinzugefügt
                     allPixels.add(new ImagePixel(x, y, "yellow", true, 1.0d));
+                    sumX += x;
+                    sumY += y;
+                    sumWeight += 1.0d;
                 } else if (isWhiteSticker(red, green, blue)) {
                     isAmoeba[y][x] = true;
                     hasSticker = true;
@@ -75,6 +145,9 @@ public class PixelCounter {
                     if (y > stickerMaxY) stickerMaxY = y;
                     // abfrage der Sticker area
                     allPixels.add(new ImagePixel(x, y, "sticker", true, 1.01d));
+                    sumX += x * 1.01d;
+                    sumY += y * 1.01d;
+                    sumWeight += 1.01d;
                 } else {
                     // Pixel werden als Hintergrund gezählt
                     allPixels.add(new ImagePixel(x, y, "background", false, 0.0d));
@@ -95,21 +168,11 @@ public class PixelCounter {
                     if (!isAmoeba[y][x]) {
                         isAmoeba[y][x] = true;
                         allPixels.add(new ImagePixel(x, y, "sticker", true, 1.01d));
+                        sumX += x * 1.01d;
+                        sumY += y * 1.01d;
+                        sumWeight += 1.01d;
                     }
                 }
-            }
-        }
-
-
-        double sumWeight = 0;
-
-        // Sticker gewicht berechnung
-        for (ImagePixel pixel : allPixels) {
-            if (pixel.isWeighted()) {
-                double w = pixel.getWeight();
-                sumX += pixel.getX() * w;
-                sumY += pixel.getY() * w;
-                sumWeight += w;
             }
         }
 
@@ -160,24 +223,11 @@ public class PixelCounter {
 
     BufferedImage drawResult(BufferedImage image, boolean[][] isAmoeba, double centerX, double centerY, StatisticMomentum.MomentumResult momentum) {
         BufferedImage result = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g2d = result.createGraphics();
 
         int height = isAmoeba.length;
         int width = isAmoeba[0].length;
 
-        // Füllt Die area der Amöbe pixel
-        g2d.setColor(Color.WHITE);
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                if (isAmoeba[y][x]) {
-                    g2d.fillRect(x, y, 1, 1);
-                }
-            }
-        }
-
-        g2d.setColor(Color.RED);
-        g2d.setStroke(new BasicStroke(2f));
-
+        // Füllt Die area der Amöbe pixel und markiert Kanten in einem Durchgang
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
                 if (!isAmoeba[y][x]) continue;
@@ -193,11 +243,16 @@ public class PixelCounter {
                 }
 
                 if (isEdge) {
-                    g2d.fillRect(x, y, 1, 1);
+                    result.setRGB(x, y, 0xFFFF0000);
+                } else {
+                    result.setRGB(x, y, 0xFFFFFFFF);
                 }
             }
         }
 
+        Graphics2D g2d = result.createGraphics();
+        g2d.setColor(Color.RED);
+        g2d.setStroke(new BasicStroke(2f));
         g2d.setColor(Color.RED);
         int radius = 8;
         g2d.fillOval((int) centerX - radius, (int) centerY - radius, radius * 2, radius * 2);
@@ -231,41 +286,4 @@ public class PixelCounter {
         g2d.dispose();
         return result;
     }
-
-    void main() {
-        new PixelCounter().run();
-    }
-
-    void run() {
-        try {
-
-            this.dir = new File(this.resourceDir);
-            File[] imageFiles = dir.listFiles((d, name) -> name.toLowerCase().endsWith(".png") || name.toLowerCase().endsWith(".jpg") || name.toLowerCase().endsWith(".jpeg"));
-
-            if (imageFiles == null || imageFiles.length == 0) {
-                System.err.println("keine bildchen gefunden in: " + resourceDir);
-                return;
-            }
-
-            Arrays.sort(imageFiles);
-
-            for (int i = 0; i < imageFiles.length; i++) {
-                String fileName = imageFiles[i].getName();
-                String baseName = fileName.substring(0, fileName.lastIndexOf('.'));
-                BufferedImage image = loadImage(imageFiles[i].getPath());
-
-                List<ImagePixel> pixels = analyzeAndSave(image, baseName, "output/" + baseName + "_result.png");
-                CSVCreator.writePixelsToCSV(pixels, "output/" + baseName + "_result.png");
-
-                if (i < imageFiles.length - 1) {
-                    System.out.println();
-                }
-            }
-
-        } catch (IOException e) {
-            System.err.println("Käfer: " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
 }
