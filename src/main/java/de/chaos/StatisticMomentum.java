@@ -5,7 +5,6 @@ import java.util.List;
 public class StatisticMomentum {
     public static MomentumResult berechne(List<ImagePixel> pixels) {
         if (pixels == null || pixels.isEmpty()) {
-            System.out.println("irgendwie ist die Liste leer, lgs Momentum.");
             return null;
         }
 
@@ -22,7 +21,6 @@ public class StatisticMomentum {
         }
 
         if (count == 0) {
-            System.out.println("oopsie woopsie, keine gewichteten Pixel.");
             return null;
         }
 

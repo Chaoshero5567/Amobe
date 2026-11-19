@@ -232,11 +232,11 @@ public class PixelCounter {
         return result;
     }
 
-    void main(String[] args) {
-        new PixelCounter().run(args);
+    void main() {
+        new PixelCounter().run();
     }
 
-    void run(String[] args) {
+    void run() {
         try {
 
             this.dir = new File(this.resourceDir);
