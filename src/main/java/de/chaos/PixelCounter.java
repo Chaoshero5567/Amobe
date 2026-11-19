@@ -141,7 +141,7 @@ public class PixelCounter {
         }
 
         System.out.println("--- " + name + " ---");
-        System.out.println("Center of mass: (" + String.format("%.2f", xCenter) + ", " + String.format("%.2f", yCenter) + ")");
+        System.out.println("Center of mass: (" + String.format("%.3f", xCenter) + ", " + String.format("%.3f", yCenter) + ")");
 
         StatisticMomentum.MomentumResult momentum = StatisticMomentum.berechne(allPixels);
 
@@ -250,7 +250,7 @@ public class PixelCounter {
         // text
         g2d.setColor(Color.RED);
         g2d.setFont(new Font("Arial", Font.BOLD, 48));
-        String label = String.format("CM: (%.1f, %.1f)", centerX, centerY);
+        String label = String.format("CM: (%.3f, %.3f)", centerX, centerY);
         g2d.drawString(label, (int) centerX + 20, (int) centerY - 20);
 
         g2d.dispose();

@@ -31,7 +31,7 @@ Bild mit Outline, bewerteter Masse, Schwerbunkt und Momentum
 Hinweis: Wie zu sehen ist ist die Berechnung nicht perfekt da hier ein großer Teil unten links fehlerhaft ausgeschnitten wurde und somit nicht mit berechnet wurde.
 
 
-Schwerpunkt liegt bei: (1773,67; 1421,64)
+Schwerpunkt liegt bei: (1773,672; 1421,640)
 
 Statische Momente:
 
@@ -49,7 +49,7 @@ Bild mit Outline, bewerteter Masse, Schwerbunkt und Momentum
 
 ![resultat2](https://github.com/Chaoshero5567/Amobe/blob/main/output/Amoebe_2_result.png)
 
-Schwerpunkt liegt bei:(1838,27, 1521,87)
+Schwerpunkt liegt bei:(1838,274, 1521,870)
 
 Statische Momente:
 
