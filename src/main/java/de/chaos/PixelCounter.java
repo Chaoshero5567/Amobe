@@ -64,26 +64,22 @@ public class PixelCounter {
                     yellowPixels++;
                     isAmoeba[y][x] = true;
                     isYellowPixel[y][x] = true;
-                    sumX += x;
-                    sumY += y;
 
                     // Daten werden hinzugefügt
-                    allPixels.add(new ImagePixel(x, y, "yellow", true));
+                    allPixels.add(new ImagePixel(x, y, "yellow", true, 1.0d));
                 } else if (isWhiteSticker(red, green, blue)) {
                     whitePixels++;
                     isAmoeba[y][x] = true;
-                    sumX += x;
-                    sumY += y;
                     hasSticker = true;
                     if (x < stickerMinX) stickerMinX = x;
                     if (x > stickerMaxX) stickerMaxX = x;
                     if (y < stickerMinY) stickerMinY = y;
                     if (y > stickerMaxY) stickerMaxY = y;
                     // abfrage der Sticker area
-                    allPixels.add(new ImagePixel(x, y, "sticker", true));
+                    allPixels.add(new ImagePixel(x, y, "sticker", true, 1.01d));
                 } else {
                     // Pixel werden als Hintergrund gezählt
-                    allPixels.add(new ImagePixel(x, y, "background", false));
+                    allPixels.add(new ImagePixel(x, y, "background", false, 0.0d));
                 }
             }
         }
@@ -101,21 +97,27 @@ public class PixelCounter {
                     if (!isAmoeba[y][x]) {
                         isAmoeba[y][x] = true;
                         whitePixels++;
-                        sumX += x;
-                        sumY += y;
-                        int rgb = image.getRGB(x, y);
-                        int red = (rgb >> 16) & 0xFF;
-                        int green = (rgb >> 8) & 0xFF;
-                        int blue = rgb & 0xFF;
-                        allPixels.add(new ImagePixel(x, y, "sticker", true));
+                        allPixels.add(new ImagePixel(x, y, "sticker", true, 1.01d));
                     }
                 }
             }
         }
 
-        long totalPixels = yellowPixels + whitePixels;
-        double centerX = (totalPixels > 0) ? sumX / totalPixels : 0;
-        double centerY = (totalPixels > 0) ? sumY / totalPixels : 0;
+
+         double sumWeight = 0;
+
+         // Sticker gewicht berechnung
+         for (ImagePixel pixel : allPixels) {
+             if (pixel.isWeighted()) {
+                 double w = pixel.getWeight();
+                 sumX += pixel.getX() * w;
+                 sumY += pixel.getY() * w;
+                 sumWeight += w;
+             }
+         }
+
+         double xCenter = sumX / sumWeight;
+         double yCenter = sumY / sumWeight;
 
         // edge
         for (int y = 0; y < height; y++) {
@@ -139,12 +141,12 @@ public class PixelCounter {
         }
 
         System.out.println("--- " + name + " ---");
-        System.out.println("Center of mass: (" + String.format("%.2f", centerX) + ", " + String.format("%.2f", centerY) + ")");
+        System.out.println("Center of mass: (" + String.format("%.2f", xCenter) + ", " + String.format("%.2f", yCenter) + ")");
 
         StatisticMomentum.MomentumResult momentum = StatisticMomentum.berechne(allPixels);
 
         // Bild generation
-        BufferedImage result = drawResult(image, isAmoeba, centerX, centerY, momentum);
+        BufferedImage result = drawResult(image, isAmoeba, xCenter, yCenter, momentum);
 
         File outputFile = new File(outputPath);
         outputFile.getParentFile().mkdirs();
@@ -255,7 +257,11 @@ public class PixelCounter {
         return result;
     }
 
-    public void main(String[] args) {
+    public static void main(String[] args) {
+        new PixelCounter().run(args);
+    }
+
+    void run(String[] args) {
         try {
             System.out.println("=== Amoeba Analysis ===\n");
 

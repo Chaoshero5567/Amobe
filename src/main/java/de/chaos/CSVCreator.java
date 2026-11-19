@@ -24,7 +24,7 @@ public class CSVCreator {
 
             // Write each pixel
             for (ImagePixel pixel : pixels) {
-                writer.write(String.format("%d,%d,%s,%s",
+                writer.write(String.format("%.2f,%.2f,%s,%s",
                         pixel.getX(), pixel.getY(), pixel.getColourType(), pixel.isWeighted()));
                 writer.newLine();
             }

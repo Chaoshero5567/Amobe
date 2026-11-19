@@ -6,8 +6,9 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class ImagePixel {
-    private final int x;
-    private final int y;
+    private final double x;
+    private final double y;
     private final String colourType;
     private final boolean weighted;
+    private final double weight;
 }
