@@ -10,22 +10,23 @@ public class StatisticMomentum {
 
         double sumX = 0;
         double sumY = 0;
-        long count = 0;
+        double sumWeight = 0;
 
         for (ImagePixel pixel : pixels) {
             if (pixel.isWeighted()) {
-                sumX += pixel.getX();
-                sumY += pixel.getY();
-                count++;
+                double weight = pixel.getWeight();
+                sumX += pixel.getX() * weight;
+                sumY += pixel.getY() * weight;
+                sumWeight += weight;
             }
         }
 
-        if (count == 0) {
+        if (sumWeight == 0) {
             return null;
         }
 
-        double xCenter = sumX / count;
-        double yCenter = sumY / count;
+        double xCenter = sumX / sumWeight;
+        double yCenter = sumY / sumWeight;
 
         double x = 0.0;
         double y = 0.0;
@@ -34,9 +35,10 @@ public class StatisticMomentum {
             if (pixel.isWeighted()) {
                 double dx = pixel.getX() - xCenter;
                 double dy = pixel.getY() - yCenter;
+                double weight = pixel.getWeight();
 
-                x += dx * dx;
-                y += dy * dy;
+                x += dx * dx * weight;
+                y += dy * dy * weight;
             }
         }
 
