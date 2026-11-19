@@ -17,17 +17,21 @@ public class CSVCreator {
         File file = new File(csvPath);
         file.getParentFile().mkdirs();
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
-            // Write header
-            writer.write("x,y,colourType,weighted");
-            writer.newLine();
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file), 64 * 1024)) {
+            StringBuilder sb = new StringBuilder();
 
-            // Write each pixel
+            sb.append("x,y,colourType,weighted").append('\n');
+
             for (ImagePixel pixel : pixels) {
-                writer.write(String.format("%.2f,%.2f,%s,%s",
-                        pixel.getX(), pixel.getY(), pixel.getColourType(), pixel.isWeighted()));
-                writer.newLine();
+                sb.append(pixel.getX()).append(',')
+                        .append(pixel.getY()).append(',')
+                        .append(pixel.getColourType()).append(',')
+                        .append(pixel.isWeighted())
+                        .append('\n');
+
+
             }
+            writer.write(sb.toString());
         }
     }
 }
