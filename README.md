@@ -28,7 +28,7 @@ Bild mit Outline, bewerteter Masse, Schwerbunkt und Momentum
 
 ![resultat1](https://github.com/Chaoshero5567/Amobe/blob/main/output/Amoebe_1_result.png)
 
-Hinweis: Wie zu sehen ist ist die Berechnung nicht perfekt da hier ein großer Teil unten links fehlerhaft ausgeschnitten wurde und somit nicht mit berechnet wurde.
+Hinweis: Wie zu sehen ist ist die Berechnung nicht perfekt da hier ein  Teil unten links fehlerhaft ausgeschnitten wurde und somit nicht mit berechnet wurde. Dies wurde aber teilweise durch erweiterung des erkennungsbereiches behoben.
 
 
 Schwerpunkt liegt bei: (1763,228; 1432,014)
