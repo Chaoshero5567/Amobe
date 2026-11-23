@@ -16,6 +16,32 @@ Projekt zur Berechnung des Schwerpunktes und des Statischen Moments der IAM Amö
 
   Bei dem Statischen Moment wird vom Mittelpunkt des Scwhwerpunktes ausgegangen, und diese werden in pixel^2 angegeben.
 
+
+  # Wie wurde das Problem angegangen?
+  Zur berechnung wird hier ein ganz einfaches System benutz.
+  Erstmal werden alle Pixel als entweder Amöbe, Sticker oder als nichts katogoriert.
+  Diese wird dann in 2 Achsen simplifiziert, X und Y, jeder Pixel wirdd beiden Achsen zugeordnet, bei den Pixel des Stickers wird statt +1 dieser mit 1.01 multipliziert.
+  Nun wird einfach der Wert der pixel in X und Y achse durch die anzahl der Pixel, die mit ihrem eigenen Gewicht multipliziert wurde, dividiert.
+
+  Also wir gehen in X und Y achse von 0, und finden dann die Mitte der erkannten Pixel.
+
+  Ich hoffe diese erklärung ergibt Sinn, sie hat bei mir im Kopf mehr Sinn ergeben
+
+
+  // Visualisuerung:
+
+   A B C
+   D E F
+   G H I
+
+  Wird zu:
+  X : A B C D E F G H I
+  Y: A B C D E F G H I
+
+  Wir gehen davon aus das alle von A bis I gleich sind und nicht der Hintergrund sind.
+
+  Diese werden dann beide mit dem Gewicht dividiert, hier 9.
+
 # Ergebnisse
 
 #Amöbe 1
