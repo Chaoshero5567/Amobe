@@ -19,28 +19,28 @@ Projekt zur Berechnung des Schwerpunktes und des Statischen Moments der IAM Amö
 
   # Wie wurde das Problem angegangen?
   Zur berechnung wird hier ein ganz einfaches System benutz.
-  Erstmal werden alle Pixel als entweder Amöbe, Sticker oder als nichts katogoriert.
+  Erstmal werden alle Pixel als entweder Amöbe, Sticker oder als nichts katogoriert. <br> Das Programm gewichtet dabei nur Pixel ab einem Alpha wert von 128, um die Transparenten Pixel auszusortieren.
   Diese wird dann in 2 Achsen simplifiziert, X und Y, jeder Pixel wirdd beiden Achsen zugeordnet, bei den Pixel des Stickers wird statt +1 dieser mit 1.01 multipliziert.
-  Nun wird einfach der Wert der pixel in X und Y achse durch die anzahl der Pixel, die mit ihrem eigenen Gewicht multipliziert wurde, dividiert.
-
+  <br>Nun wird einfach der Wert der pixel in X und Y achse durch die Summe der Pixelgewichte dividiert.
+  <br><br>
   Also wir gehen in X und Y achse von 0, und finden dann die Mitte der erkannten Pixel.
-
+  <br><br>
   Ich hoffe diese erklärung ergibt Sinn, sie hat bei mir im Kopf mehr Sinn ergeben
 
 
   // Visualisuerung:
-
-   A B C
-   D E F
-   G H I
-
+ <br><br>
+   A B C<br>
+   D E F<br>
+   G H I<br>
+  <br>
   Wird zu:
-  X : A B C D E F G H I
-  Y: A B C D E F G H I
+  X : A B C D E F G H I<br>
+  Y: A B C D E F G H I<br>
 
   Wir gehen davon aus das alle von A bis I gleich sind und nicht der Hintergrund sind.
 
-  Diese werden dann beide mit dem Gewicht dividiert, hier 9.
+  Diese werden dann mit der Summer der Gewichte dividiert.
 
 # Ergebnisse
 
